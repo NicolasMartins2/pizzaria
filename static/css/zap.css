@@ -1,0 +1,35 @@
+  /* Ícone do WhatsApp Fixo */
+  .whatsapp-link {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    color: white;
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.whatsapp-link:hover {
+    transform: scale(1.1);
+    background-color: #20b954;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .whatsapp-link {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+        bottom: 15px;
+        right: 15px;
+    }
+}

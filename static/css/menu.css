@@ -1,0 +1,104 @@
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #8b0000; /* Cor vermelho escuro */
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    transform: translateX(-100%); /* Começa escondido no mobile */
+}
+
+.sidebar.show {
+    transform: translateX(0); /* Mostra o menu */
+}
+
+.sidebar img {
+    display: block;
+    width: 150px;
+    margin: 3rem auto 20px auto; /* Espaço acima e abaixo da logo */
+    padding: 10px;
+    background-color: #ffffff; /* Fundo branco para a logo */
+    border-radius: 50%; /* Borda arredondada */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra na logo */
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar a i {
+    margin-right: 10px; /* Espaço entre o ícone e o texto */
+    font-size: 20px;
+}
+
+.sidebar a:hover {
+    background-color: #ffa07a; /* Cor de hover - laranja claro */
+    color: #8b0000; /* Texto vermelho escuro no hover */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Sombra no hover */
+    transform: translateX(5px); /* Movimento suave ao passar o mouse */
+}
+
+.close-btn {
+    font-size: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.open-btn {
+    font-size: 30px;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    color: #8b0000; /* Cor do botão de abrir o menu */
+    display: none; /* Oculto por padrão */
+}
+
+.main-content {
+   height: 1000px;
+    background-color: white;
+    margin-left: 250px; /* Alinhado ao lado do menu lateral */
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+   
+}
+
+.sidebar-hidden {
+    margin-left: 0 !important; /* Remove a margem quando o menu está fechado */
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100vw; /* Ocupa a largura total da tela no mobile */
+        transform: translateX(-100%); /* Começa escondido no mobile */
+    }
+
+    .main-content {
+        margin-left: 0; /* Remove a margem do conteúdo principal */
+    }
+
+    .open-btn {
+        display: block; /* Mostra o botão de abrir no mobile */
+    }
+}
+
+@media (min-width: 769px) {
+    .open-btn {
+        display: block; /* Mostra o botão de abrir no desktop quando o menu está fechado */
+    }
+}

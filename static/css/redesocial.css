@@ -1,0 +1,50 @@
+    /* Seção de Redes Sociais */
+    .delivery-social {
+        margin-bottom: 20px; /* Reduzi o espaçamento inferior */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .delivery-social h3 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 10px; /* Reduzi o espaçamento abaixo do título */
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .delivery-social p {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 15px; /* Reduzi o espaçamento abaixo da descrição */
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .social-icon {
+        font-size: 2rem;
+        color: #e74c3c;
+        transition: transform 0.3s ease;
+    }
+
+    .social-icon:hover {
+        transform: scale(1.2);
+        color: #333;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .social-icons {
+            gap: 15px;
+        }
+
+        .social-icon {
+            font-size: 1.5rem;
+        }
+    }

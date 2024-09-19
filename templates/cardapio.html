@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+    <style>
+/* Estilos do corpo e container */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 1200px; /* Limita a largura máxima */
+    margin: 0 auto; /* Centraliza horizontalmente */
+}
+
+.product-category {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #e53935;
+    font-weight: bold;
+    text-align: center;
+}
+
+.product-container {
+    display: flex;
+    justify-content: center; /* Centraliza os itens no eixo horizontal */
+    flex-wrap: wrap;
+    gap: 20px; /* Espaçamento uniforme entre os itens */
+}
+
+.product-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Tamanho fixo que ajuda na responsividade */
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-item img {
+    width: 100%; /* Ajusta a largura da imagem ao tamanho do container */
+    height: 200px; /* Altura fixa */
+    object-fit: cover;
+}
+
+.product-item h2 {
+    font-size: 1.5em;
+    margin: 15px 0;
+    color: #333;
+}
+
+.product-item p {
+    margin: 0 15px;
+    color: #666;
+}
+
+.price {
+    font-size: 1.25em;
+    font-weight: bold;
+    color: #e53935;
+    margin: 10px 0;
+}
+
+.add-to-cart {
+    background-color: #e53935;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart:hover {
+    background-color: #c62828;
+}
+
+.cart-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-modal.open {
+    display: flex;
+}
+
+.cart {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+}
+
+.cart h3 {
+    margin: 0 0 15px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.cart-item-details {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-item-details span {
+    display: block;
+    color: #333;
+}
+
+.cart-item button {
+    background-color: #e53935;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.8em;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+}
+
+.cart-item button:hover {
+    background-color: #c62828;
+}
+
+.checkout-button {
+    background-color: #43a047;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 10px 20px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.checkout-button:hover {
+    background-color: #388e3c;
+}
+
+.cart-total {
+    font-weight: bold;
+    text-align: right;
+    margin-top: 15px;
+    color: #333;
+}
+
+.close-cart {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e53935;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.close-cart:hover {
+    background-color: #c62828;
+}
+
+@media (max-width: 1024px) {
+    .product-item {
+        width: 45%; /* Dois itens por linha em telas médias */
+    }
+}
+
+@media (max-width: 768px) {
+    .product-item {
+        width: 100%; /* Um item por linha em telas pequenas */
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Botão para abrir o menu -->
+        <div class="open-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+        <!-- Menu lateral -->
+        <div class="sidebar" id="sidebar">
+            <span class="close-btn" onclick="toggleSidebar()">&#10006;</span>
+            <img src="{{ url_for('static', filename='img/logo pizzaria.png') }}" alt="Logo da Pizzaria">
+            <a href="/"><i class="fas fa-home"></i>Início</a>
+            <a href="cardapio"><i class="fas fa-pizza-slice"></i>Cardápio</a>
+            <a href="entrega"><i class="fas fa-truck"></i>Entrega</a>
+            <a href="contato"><i class="fas fa-phone-alt"></i>Contato</a>
+            <a href="sobre"><i class="fas fa-info-circle"></i>Sobre Nós</a>
+        </div>
+    </header>
+
+    <div id="main-content" class="main-content">
+        <h2 style="border-bottom: 20px; text-align: center; color: #e53935; font-size: 2rem;font-weight: bold;">Cardápio</h2>
+        <br> <br>
+
+        <div class="container">
+            <!-- Pizzas Salgadas -->
+            <div class="product-category">
+                <div class="category-title">Pizzas Salgadas</div>
+                <div class="product-container">
+                    <div class="product-item">
+                        <img src="{{ url_for('static', filename='img/pizza mar.png') }}" alt="Pizza Margherita">
+                        <h2>Pizza Margherita</h2>
+                        <p>Pizza tradicional com molho de tomate e mozzarella.</p>
+                        <p class="price">R$ 35,00</p>
+                        <button class="add-to-cart" data-id="1" data-title="Pizza Margherita" data-price="35.00" data-description="Pizza tradicional com molho de tomate e mozzarella" data-picture_url="{{ url_for('static', filename='img/pizza-margherita.png') }}">Adicionar ao Carrinho</button>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="{{ url_for('static', filename='img/pepperoni.png') }}" alt="Pizza Pepperoni">
+                        <h2>Pizza Pepperoni</h2>
+                        <p>Pizza com bastante pepperoni e queijo.</p>
+                        <p class="price">R$ 40,00</p>
+                        <button class="add-to-cart" data-id="2" data-title="Pizza Pepperoni" data-price="40.00" data-description="Pizza com bastante pepperoni e queijo" data-picture_url="{{ url_for('static', filename='img/pizza-pepperoni.png') }}">Adicionar ao Carrinho</button>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="{{ url_for('static', filename='img/pizza fran.png') }}" alt="Pizza de Frango">
+                        <h2>Pizza de Frango</h2>
+                        <p>Pizza de frango com catupiry e milho.</p>
+                        <p class="price">R$ 38,00</p>
+                        <button class="add-to-cart" data-id="3" data-title="Pizza de Frango" data-price="38.00" data-description="Pizza de frango com catupiry e milho" data-picture_url="{{ url_for('static', filename='img/pizza-frango.png') }}">Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pizzas Doces -->
+            <div class="product-category">
+                <div class="category-title">Pizzas Doces</div>
+                <div class="product-container">
+
+                    <div class="product-item">
+                        <img src="{{ url_for('static', filename='img/chocolate.jpg') }}" alt="Pizza de Chocolate">
+                        <h2>Pizza de Chocolate</h2>
+                        <p>Pizza doce com cobertura de chocolate.</p>
+                        <p class="price">R$ 32,00</p>
+                        <button class="add-to-cart" data-id="4" data-title="Pizza de Chocolate" data-price="32.00" data-description="Pizza doce com cobertura de chocolate" data-picture_url="{{ url_for('static', filename='img/pizza-chocolate.png') }}">Adicionar ao Carrinho</button>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="{{ url_for('static', filename='img/coco.jfif') }}" alt="Pizza de Morango">
+                        <h2>Pizza de Coco</h2>
+                        <p>Pizza com cocos frescos e cobertura de chocolate.</p>
+                        <p class="price">R$ 36,00</p>
+                        <button class="add-to-cart" data-id="5" data-title="Pizza de Morango" data-price="36.00" data-description="Pizza com morangos frescos e chocolate branco" data-picture_url="{{ url_for('static', filename='img/pizza-morango.png') }}">Adicionar ao Carrinho</button>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="{{ url_for('static', filename='img/canela.jpeg') }}" alt="Pizza de Morango">
+                        <h2>Pizza de Banana</h2>
+                        <p>Pizza de Banana com Canela e raspas de chocolate.</p>
+                        <p class="price">R$ 36,00</p>
+                        <button class="add-to-cart" data-id="5" data-title="Pizza de Morango" data-price="36.00" data-description="Pizza com morangos frescos e chocolate branco" data-picture_url="{{ url_for('static', filename='img/pizza-morango.png') }}">Adicionar ao Carrinho</button>
+                    </div>
+
+                </div>
+            </div>
+
+                <!-- Pizzas Doces -->
+                <div class="product-category">
+                    <div class="category-title">Bebidas</div>
+                    <div class="product-container">
+                
+                        <div class="product-item">
+                            <img src="{{ url_for('static', filename='img/coca.jpeg') }}" alt="Coca Cola 2L">
+                            <h2>Coca Cola 2L</h2>
+                            <p>Refrigerante Coca Cola de 2 litros.</p>
+                            <p class="price">R$ 10,00</p>
+                            <button class="add-to-cart" data-id="6" data-title="Coca Cola 2L" data-price="10.00" data-description="Refrigerante Coca Cola de 2 litros" data-picture_url="{{ url_for('static', filename='img/coca-2l.png') }}">Adicionar ao Carrinho</button>
+                        </div>
+                
+                        <div class="product-item">
+                            <img src="{{ url_for('static', filename='img/kuat.jpg') }}" alt="Kuat 2L">
+                            <h2>Kuat 2L</h2>
+                            <p>Refrigerante Kuat de 2 litros.</p>
+                            <p class="price">R$ 9,00</p>
+                            <button class="add-to-cart" data-id="7" data-title="Kuat 2L" data-price="9.00" data-description="Refrigerante Kuat de 2 litros" data-picture_url="{{ url_for('static', filename='img/kuat-2l.png') }}">Adicionar ao Carrinho</button>
+                        </div>
+                
+                        <div class="product-item">
+                            <img src="{{ url_for('static', filename='img/suco.png') }}" alt="Suco Natural de Laranja 350ml">
+                            <h2>Suco de Laranja 350ml</h2>
+                            <p>Suco natural de laranja, 350 ml.</p>
+                            <p class="price">R$ 8,00</p>
+                            <button class="add-to-cart" data-id="8" data-title="Suco Natural de Laranja 350ml" data-price="8.00" data-description="Suco natural de laranja, 350 ml" data-picture_url="{{ url_for('static', filename='img/suco-laranja-350ml.png') }}">Adicionar ao Carrinho</button>
+                        </div>
+                
+                    </div>
+                </div>
+                
+
+        </div>
+
+        <!-- Botão do Carrinho -->
+        <button id="cart-button" onclick="toggleCartModal()" style="position: fixed; bottom: 20px; right: 20px; background-color: #e53935; color: #fff; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+            <i class="fas fa-shopping-cart"></i>
+        </button>
+
+        <!-- Modal do Carrinho -->
+        <div id="cart-modal" class="cart-modal">
+            <div class="cart">
+                <button class="close-cart" onclick="toggleCartModal()">×</button>
+                <h3>
+                    Carrinho
+                    <span id="item-count">0</span> 
+                </h3>
+                <div id="cart-items">
+                    <p>Carrinho vazio</p>
+                </div>
+                <div class="cart-total" id="cart-total">Total: R$ 0,00</div>
+                <button id="checkout-button" class="checkout-button">Finalizar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cart = {};
+        const cartItemsContainer = document.getElementById('cart-items');
+        const checkoutButton = document.getElementById('checkout-button');
+        const itemCount = document.getElementById('item-count');
+        const cartTotal = document.getElementById('cart-total');
+        const cartModal = document.getElementById('cart-modal');
+
+        function updateCartDisplay() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let count = 0;
+            for (const [id, item] of Object.entries(cart)) {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-details">
+                        <span>${item.title} - R$ ${item.price.toFixed(2)}</span>
+                        <span>Qtd: ${item.quantity}</span>
+                        <button onclick="removeFromCart(${id})">Remover</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+                total += item.price * item.quantity;
+                count += item.quantity;
+            }
+            itemCount.textContent = count;
+            cartTotal.textContent = `Total: R$ ${total.toFixed(2)}`;
+            if (total === 0) {
+                cartItemsContainer.innerHTML = '<p>Carrinho vazio</p>';
+            }
+        }
+
+        function addToCart(id, title, price, description, picture_url) {
+            if (cart[id]) {
+                cart[id].quantity += 1;
+            } else {
+                cart[id] = { title, price, quantity: 1, description, picture_url };
+            }
+            updateCartDisplay();
+            alert(`${title} foi adicionado ao carrinho!`);
+        }
+
+        function removeFromCart(id) {
+            delete cart[id];
+            updateCartDisplay();
+        }
+
+        function finalizePurchase() {
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cart)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else {
+                    alert('Não foi possível gerar o link de pagamento.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao finalizar compra:', error);
+            });
+        }
+
+        checkoutButton.addEventListener('click', finalizePurchase);
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                const title = button.getAttribute('data-title');
+                const price = parseFloat(button.getAttribute('data-price'));
+                const description = button.getAttribute('data-description');
+                const picture_url = button.getAttribute('data-picture_url');
+                addToCart(id, title, price, description, picture_url);
+            });
+        });
+
+        function toggleCartModal() {
+            cartModal.classList.toggle('open');
+        }
+    </script>
+
+    
+</body>
+</html>
